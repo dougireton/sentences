@@ -6,12 +6,12 @@ Description: 'sentences
   '
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 10
 Outputs:
-  HelloWorldAPI:
+  SentencesAPI:
     Description: API Gateway endpoint URL for Prod environment for First Function
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/sentences/
   SentencesFunction:
     Description: First Lambda Function ARN
     Value:
@@ -19,7 +19,7 @@ Outputs:
       - SentencesFunction
       - Arn
   SentencesFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
+    Description: Implicit IAM Role created for Sentences function
     Value:
       Fn::GetAtt:
       - SentencesFunctionRole
@@ -35,7 +35,7 @@ Resources:
         CatchAll:
           Properties:
             Method: POST
-            Path: /hello
+            Path: /sentences
           Type: Api
       Handler: api
       Runtime: go1.x

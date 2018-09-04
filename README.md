@@ -1,16 +1,5 @@
 # sentences
 
-This is a sample template for sentences - Below is a brief explanation of what we have generated for you:
-
-```bash
-.
-├── Makefile                    <-- Make to automate build
-├── README.md                   <-- This instructions file
-├── hello-world                 <-- Source code for a lambda function
-│   ├── main.go                 <-- Lambda function code
-│   └── main_test.go            <-- Unit tests
-└── template.yaml
-```
 
 ## Requirements
 
@@ -25,7 +14,7 @@ This is a sample template for sentences - Below is a brief explanation of what w
 In this example we use the built-in `go get` and the only dependency we need is AWS Lambda Go SDK:
 
 ```shell
-go get -u github.com/aws/aws-lambda-go/...
+make install
 ```
 
 **NOTE:** As you change your application code as well as dependencies during development, you might want to research how to handle dependencies in Golang at scale.
@@ -37,7 +26,7 @@ Golang is a staticly compiled language, meaning that in order to run it you have
 You can issue the following command in a shell to build it:
 
 ```shell
-GOOS=linux GOARCH=amd64 go build -o hello-world/hello-world ./hello-world
+make build
 ```
 
 **NOTE**: If you're not building the function on a Linux machine, you will need to specify the `GOOS` and `GOARCH` environment variables, this allows Golang to build your function for another system architecture and ensure compatability.
@@ -47,21 +36,21 @@ GOOS=linux GOARCH=amd64 go build -o hello-world/hello-world ./hello-world
 **Invoking function locally through local API Gateway**
 
 ```bash
-sam local start-api
+make local-api
 ```
 
-If the previous command ran successfully you should now be able to hit the following local endpoint to invoke your function `http://localhost:3000/hello`
+If the previous command ran successfully you should now be able to hit the following local endpoint to invoke your function `http://localhost:3000/sentences`
 
 **SAM CLI** is used to emulate both Lambda and API Gateway locally and uses our `template.yaml` to understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes:
 
 ```yaml
 ...
 Events:
-    HelloWorld:
+    Sentences:
         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
         Properties:
-            Path: /hello
-            Method: get
+            Path: /sentences
+            Method: post
 ```
 
 ## Packaging and deployment
@@ -73,7 +62,7 @@ AWS Lambda Python runtime requires a flat folder with all dependencies including
     FirstFunction:
         Type: AWS::Serverless::Function
         Properties:
-            CodeUri: hello_world/
+            CodeUri: api/
             ...
 ```
 
@@ -109,22 +98,23 @@ After deployment is complete you can run the following command to retrieve the A
 aws cloudformation describe-stacks \
     --stack-name sentences \
     --query 'Stacks[].Outputs'
-``` 
+```
 
 ### Testing
 
 We use `testing` package that is built-in in Golang and you can simply run the following command to run our tests:
 
 ```shell
-go test -v ./hello-world/
+go test -v ./api/
 ```
+
 # Appendix
 
 ### Golang installation
 
 Please ensure Go 1.x (where 'x' is the latest version) is installed as per the instructions on the official golang website: https://golang.org/doc/install
 
-A quickstart way would be to use Homebrew, chocolatey or your linux package manager.
+A quickstart way would be to use Homebrew, chocolatey or your Linux package manager.
 
 #### Homebrew (Mac)
 
@@ -178,7 +168,7 @@ aws cloudformation describe-stacks \
 
 Here are a few ideas that you can use to get more acquainted as to how this overall process works:
 
-* Create an additional API resource (e.g. /hello/{proxy+}) and return the name requested through this new path
+* Create an additional API resource (e.g. /sentences/{proxy+}) and return the name requested through this new path
 * Update unit test to capture that
 * Package & Deploy
 
