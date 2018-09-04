@@ -1,5 +1,6 @@
 # sentences
 
+Sentences is an API for parsing English text into sentences.
 
 ## Requirements
 
