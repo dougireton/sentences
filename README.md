@@ -46,6 +46,25 @@ following local endpoint to invoke your function:
  curl --data-binary "@sentences/testdata/basic.txt" http://localhost:3000/sentences | jq .
  ```
 
+### Example Test Output (using httpie)
+
+ ```shell
+$ cat sentences/testdata/basic.txt|http POST :3000/sentences
+HTTP/1.0 200 OK
+Content-Length: 188
+Content-Type: application/json
+Date: Tue, 04 Sep 2018 04:19:00 GMT
+Server: Werkzeug/0.14.1 Python/3.7.0
+
+[
+    "This is a sentence with a period.",
+    "Is it followed by a sentence with a question mark?",
+    "Yes it is!",
+    "Now we have a sentence with two spaces before it.",
+    "New paragraph with \"quotes\"."
+]
+```
+
 **SAM CLI** is used to emulate both Lambda and API Gateway locally and uses our `template.yaml` to understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes:
 
 ```yaml
@@ -154,3 +173,7 @@ sam deploy \
 aws cloudformation describe-stacks \
     --stack-name sentences --query 'Stacks[].Outputs'
 ```
+
+## Todos
+
+Todos.md contains items for future improvements.
