@@ -60,30 +60,15 @@ Events:
 
 ## Packaging and deployment
 
-AWS Lambda Python runtime requires a flat folder with all dependencies including the application. SAM will use `CodeUri` property to know where to look up for both application and dependencies:
 
-```yaml
-...
-    FirstFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: api/
-            ...
-```
-
-First and foremost, we need a `S3 bucket` where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don't have a S3 bucket to store code artifacts then this is a good time to create one:
-
-```bash
-aws s3 mb s3://BUCKET_NAME
-```
-
-Next, run the following command to package our Lambda function to S3:
+Run the following command to package our Lambda function to S3:
 
 ```bash
 sam package \
     --template-file template.yaml \
     --output-template-file packaged.yaml \
     --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
+    --s3-prefix sentences
 ```
 
 Next, the following command will create a Cloudformation Stack and deploy your SAM resources.
@@ -110,10 +95,10 @@ aws cloudformation describe-stacks \
 We use `testing` package that is built-in in Golang and you can simply run the following command to run our tests:
 
 ```shell
-go test -v ./api/
+make test
 ```
 
-# Appendix
+## Appendix
 
 ### Golang installation
 
@@ -149,6 +134,7 @@ If it's already installed, run the following command to ensure it's the latest v
 ```shell
 choco upgrade golang
 ```
+
 ## AWS CLI commands
 
 AWS CLI commands to package, deploy and describe outputs defined within the cloudformation stack:
@@ -168,15 +154,3 @@ sam deploy \
 aws cloudformation describe-stacks \
     --stack-name sentences --query 'Stacks[].Outputs'
 ```
-
-## Bringing to the next level
-
-Here are a few ideas that you can use to get more acquainted as to how this overall process works:
-
-* Create an additional API resource (e.g. /sentences/{proxy+}) and return the name requested through this new path
-* Update unit test to capture that
-* Package & Deploy
-
-Next, you can use the following resources to know more about beyond hello world samples and how others structure their Serverless applications:
-
-* [AWS Serverless Application Repository](https://aws.amazon.com/serverless/serverlessrepo/)

@@ -7,3 +7,4 @@
    package. Otherwise, we'll end up with coupling.
 5. Mock ParseText via a test interface in main_test.go. Otherwise this is an
    integration test, not a unit test.
+6. Troubleshoot why API Gateway is slow.
